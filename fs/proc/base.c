@@ -88,6 +88,7 @@
 #include <asm/hardwall.h>
 #endif
 #include <trace/events/oom.h>
+#include "../mount.h"
 #include "internal.h"
 
 /* NOTE:
@@ -1802,9 +1803,10 @@ static int proc_fd_info(struct inode *inode, struct path *path, char *info)
 			if (info)
 				snprintf(info, PROC_FDINFO_MAX,
 					 "pos:\t%lli\n"
-					 "flags:\t0%o\n",
+					 "flags:\t0%o\n"
+                     "mnt_id:\t%i\n",
 					 (long long) file->f_pos,
-					 f_flags);
+					 f_flags, real_mount(file->f_path.mnt)->mnt_id);
 			spin_unlock(&files->file_lock);
 			put_files_struct(files);
 			return 0;
