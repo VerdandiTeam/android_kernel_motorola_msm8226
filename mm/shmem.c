@@ -1501,7 +1501,7 @@ static int shmem_wait_for_pins(struct address_space *mapping)
 
 int shmem_add_seals(struct file *file, unsigned int seals)
 {
-	struct inode *inode = file_inode(file);
+	struct inode *inode = file->f_path.dentry->d_inode;
 	struct shmem_inode_info *info = SHMEM_I(inode);
 	int error;
 
@@ -1575,7 +1575,7 @@ int shmem_get_seals(struct file *file)
 	if (file->f_op != &shmem_file_operations)
 		return -EINVAL;
 
-	return SHMEM_I(file_inode(file))->seals;
+	return SHMEM_I(file->f_path.dentry->d_inode)->seals;
 }
 EXPORT_SYMBOL_GPL(shmem_get_seals);
 
@@ -2419,7 +2419,7 @@ SYSCALL_DEFINE2(memfd_create,
 		error = PTR_ERR(file);
 		goto err_fd;
 	}
-	info = SHMEM_I(file_inode(file));
+	info = SHMEM_I(file->f_path.dentry->d_inode);
 	file->f_mode |= FMODE_LSEEK | FMODE_PREAD | FMODE_PWRITE;
 	file->f_flags |= O_RDWR | O_LARGEFILE;
 	if (flags & MFD_ALLOW_SEALING)
