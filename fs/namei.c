@@ -175,7 +175,6 @@ getname(const char __user * filename)
 {
 	return getname_flags(filename, 0, NULL);
 }
-EXPORT_SYMBOL(getname);
 
 #ifdef CONFIG_AUDITSYSCALL
 void putname(struct filename *name)
@@ -1940,7 +1939,6 @@ user_path_parent(int dfd, const char __user *path, struct nameidata *nd)
 	int error;
 
 	if (IS_ERR(s)) {
-		*name = 0;
 		return s;
 	}
 
@@ -1950,7 +1948,7 @@ user_path_parent(int dfd, const char __user *path, struct nameidata *nd)
 		return ERR_PTR(error);
 	}
 
-	return error;
+	return s;
 }
 
 /*
@@ -2855,7 +2853,7 @@ int vfs_unlink(struct inode *dir, struct dentry *dentry)
 		d_delete(dentry);
 	}
 
-	return s;
+	return error;
 }
 
 /*
