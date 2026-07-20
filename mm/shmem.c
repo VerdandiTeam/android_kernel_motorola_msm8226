@@ -2574,6 +2574,8 @@ SYSCALL_DEFINE2(memfd_create,
 	info = SHMEM_I(file->f_path.dentry->d_inode);
 	file->f_mode |= FMODE_LSEEK | FMODE_PREAD | FMODE_PWRITE;
 	file->f_flags |= O_RDWR | O_LARGEFILE;
+    if (flags & MFD_ALLOW_SEALING)
+            info->seals &= ~F_SEAL_SEAL;
 
 	fd_install(fd, file);
 	kfree(name);
